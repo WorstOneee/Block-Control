@@ -24,10 +24,20 @@ Player block list for Paper 1.21.11 that complements CarbonChat. A player who bl
 | `serpensblock.exempt` | false | Staff: cannot be blocked, and blocks never apply to them |
 | `serpensblock.admin` | op | `/serpensblock reload` |
 
+## Storage
+
+Set `storage.type` in `config.yml`:
+
+- `yaml`: `plugins/SerpensBlock/blocks.yml`, for a single server.
+- `mysql`: shared MySQL/MariaDB, for a network (Velocity + several Paper servers). Use the same `storage.mysql` settings on every server, and a block made on one server applies on all of them. It uses the MySQL driver bundled with Paper.
+
+With MySQL, the tables are `<prefix>blocks (owner, target, created_at)` and `<prefix>meta`, which holds a revision counter. Every server keeps all lists in memory, so chat, voice and command checks never wait on the database. Changes are written on a background thread and bump the revision. Every `sync-seconds` (default 3), each server reads that one row off the main thread and reloads the lists only when the number changed. If MySQL is unreachable at startup, the plugin disables itself instead of running with empty lists.
+
+On the first start with `mysql`, an existing `blocks.yml` is merged into the database and renamed to `blocks.yml.imported`.
+
 ## Notes
 
-- Data is stored in `plugins/SerpensBlock/blocks.yml` (UUIDs), saved on a background thread after each change.
-- Fully event driven: no repeating tasks.
+- Apart from the MySQL revision check, everything is event driven.
 - Vanished players are never revealed: if the sender cannot see the target, the teleport command is passed through untouched.
 - This list is separate from CarbonChat's own `/ignore`.
 

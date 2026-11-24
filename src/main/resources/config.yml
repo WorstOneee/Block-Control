@@ -2,6 +2,25 @@
 # Quem bloqueia um jogador deixa de ver o chat dele, recebe nada dele no /tell,
 # não recebe pedidos de teleporte dele e deixa de ouvi-lo no voice chat.
 
+storage:
+  # yaml: blocks.yml neste servidor (só vale para ele).
+  # mysql: banco compartilhado; um bloqueio feito em qualquer servidor vale em todos.
+  #        Use os mesmos dados em todos os servidores (Hub, New Era, Eventos...).
+  #        Se houver um blocks.yml, ele é somado ao banco e renomeado para blocks.yml.imported.
+  type: yaml
+  mysql:
+    host: localhost
+    port: 3306
+    database: serpens
+    username: root
+    password: ""
+    # Só letras, números e _. As tabelas ficam <prefixo>blocks e <prefixo>meta.
+    table-prefix: serpensblock_
+    parameters: "useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8"
+    # De quantos em quantos segundos cada servidor confere se outro servidor mudou algo.
+    # É uma consulta de uma linha fora da thread principal; só recarrega quando muda.
+    sync-seconds: 3
+
 # Máximo de jogadores que cada um pode bloquear.
 max-blocks: 100
 

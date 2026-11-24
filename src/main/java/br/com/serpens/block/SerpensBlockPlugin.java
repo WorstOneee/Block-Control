@@ -7,6 +7,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import br.com.serpens.block.hook.CarbonHook;
 import br.com.serpens.block.hook.VoiceHook;
+import br.com.serpens.block.storage.Backend;
+import br.com.serpens.block.storage.MysqlBackend;
+import br.com.serpens.block.storage.YamlBackend;
 
 public final class SerpensBlockPlugin extends JavaPlugin {
 
@@ -20,8 +23,14 @@ public final class SerpensBlockPlugin extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         settings = new Settings(getConfig());
-        store = new BlockStore(new File(getDataFolder(), "blocks.yml"), getLogger());
-        store.load();
+        Backend backend = openBackend();
+        if (backend == null) {
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        store = new BlockStore(backend, getLogger());
+        store.loadNow();
+        startSync();
         policy = new BlockPolicy(this);
 
         BlockCommands commands = new BlockCommands(this);
@@ -58,7 +67,48 @@ public final class SerpensBlockPlugin extends JavaPlugin {
             }
         }
 
-        getLogger().info("Loaded block lists.");
+        getLogger().info("Block lists stored in " + backend.name() + ".");
+    }
+
+    /** Opens the configured storage; imports blocks.yml into an empty MySQL table once. */
+    private Backend openBackend() {
+        File yaml = new File(getDataFolder(), "blocks.yml");
+        String type = getConfig().getString("storage.type", "yaml");
+        if (!type.equalsIgnoreCase("mysql")) {
+            return new YamlBackend(yaml);
+        }
+        MysqlBackend mysql;
+        try {
+            mysql = new MysqlBackend(getConfig().getConfigurationSection("storage.mysql"));
+            mysql.init();
+        } catch (Exception e) {
+            getLogger().severe("Could not connect to MySQL: " + e.getMessage());
+            getLogger().severe("Fix storage.mysql in config.yml. SerpensBlock is disabled so blocks are not lost.");
+            return null;
+        }
+        if (yaml.exists()) {
+            try {
+                // Merged with INSERT IGNORE, so every server's old blocks.yml can be imported.
+                int rows = mysql.importAll(YamlBackend.read(yaml));
+                getLogger().info("Imported " + rows + " blocks from blocks.yml into MySQL.");
+                File done = new File(getDataFolder(), "blocks.yml.imported");
+                if (!yaml.renameTo(done)) {
+                    getLogger().warning("Could not rename blocks.yml; it is ignored while storage is mysql.");
+                }
+            } catch (Exception e) {
+                getLogger().severe("Could not import blocks.yml into MySQL: " + e.getMessage());
+            }
+        }
+        return mysql;
+    }
+
+    /** MySQL only: a tiny revision check off the main thread picks up changes from other servers. */
+    private void startSync() {
+        if (store.backend().getClass() != MysqlBackend.class) {
+            return;
+        }
+        long seconds = Math.max(1, getConfig().getLong("storage.mysql.sync-seconds", 3));
+        getServer().getScheduler().runTaskTimerAsynchronously(this, store::sync, seconds * 20, seconds * 20);
     }
 
     @Override
