@@ -47,4 +47,4 @@ On the first start with `mysql`, an existing `blocks.yml` is merged into the dat
 ./mvnw package
 ```
 
-The jar is written to `target/SerpensBlock-1.0.0.jar`. CarbonChat and Simple Voice Chat are optional (`softdepend`).
+The jar is written to `target/BlockControl-1.0.0.jar`. CarbonChat and Simple Voice Chat are optional (`softdepend`).

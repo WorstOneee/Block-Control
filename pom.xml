@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>br.com.serpens</groupId>
-  <artifactId>SerpensBlock</artifactId>
+  <artifactId>BlockControl</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>SerpensBlock</name>
+  <name>BlockControl</name>
   <description>Player block list: hides chat, private messages, teleport requests and voice chat from blocked players</description>
 
   <properties>
@@ -51,7 +51,7 @@
   </dependencies>
 
   <build>
-    <finalName>SerpensBlock-${project.version}</finalName>
+    <finalName>BlockControl-${project.version}</finalName>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
