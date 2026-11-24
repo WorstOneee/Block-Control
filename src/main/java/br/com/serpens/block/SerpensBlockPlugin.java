@@ -28,6 +28,9 @@ public final class SerpensBlockPlugin extends JavaPlugin {
             }
         }
 
+        getServer().getPluginManager().registerEvents(new BlockListener(this), this);
+        getServer().getPluginManager().registerEvents(new PaperChatListener(this), this);
+
         getLogger().info("Loaded block lists.");
     }
 
