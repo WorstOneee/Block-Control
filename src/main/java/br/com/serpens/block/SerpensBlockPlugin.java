@@ -5,6 +5,8 @@ import java.io.File;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import br.com.serpens.block.gui.MenuListener;
+import br.com.serpens.block.gui.Panel;
 import br.com.serpens.block.hook.CarbonHook;
 import br.com.serpens.block.hook.VoiceHook;
 import br.com.serpens.block.storage.Backend;
@@ -14,6 +16,8 @@ import br.com.serpens.block.storage.YamlBackend;
 public final class SerpensBlockPlugin extends JavaPlugin {
 
     private volatile Settings settings;
+    private volatile Panel panel;
+    private BlockCommands commands;
     private BlockStore store;
     private BlockPolicy policy;
     private CarbonHook carbon;
@@ -23,6 +27,7 @@ public final class SerpensBlockPlugin extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         settings = new Settings(getConfig());
+        panel = new Panel(getConfig());
         Backend backend = openBackend();
         if (backend == null) {
             getServer().getPluginManager().disablePlugin(this);
@@ -33,7 +38,7 @@ public final class SerpensBlockPlugin extends JavaPlugin {
         startSync();
         policy = new BlockPolicy(this);
 
-        BlockCommands commands = new BlockCommands(this);
+        commands = new BlockCommands(this);
         for (String name : new String[] {"block", "unblock", "blocklist", "serpensblock"}) {
             PluginCommand command = getCommand(name);
             if (command != null) {
@@ -43,6 +48,7 @@ public final class SerpensBlockPlugin extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new BlockListener(this), this);
+        getServer().getPluginManager().registerEvents(new MenuListener(), this);
 
         if (getServer().getPluginManager().isPluginEnabled("CarbonChat")) {
             try {
@@ -127,6 +133,23 @@ public final class SerpensBlockPlugin extends JavaPlugin {
     public void reload() {
         reloadConfig();
         settings = new Settings(getConfig());
+        panel = new Panel(getConfig());
+    }
+
+    public boolean carbonActive() {
+        return carbon != null;
+    }
+
+    public boolean voiceActive() {
+        return voice != null;
+    }
+
+    public Panel panel() {
+        return panel;
+    }
+
+    public BlockCommands commands() {
+        return commands;
     }
 
     public Settings settings() {

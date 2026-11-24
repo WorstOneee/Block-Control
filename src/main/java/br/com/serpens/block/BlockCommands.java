@@ -13,6 +13,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
+import br.com.serpens.block.gui.MainMenu;
+
 public final class BlockCommands implements TabExecutor {
 
     private final SerpensBlockPlugin plugin;
@@ -42,10 +44,23 @@ public final class BlockCommands implements TabExecutor {
             return true;
         }
 
+        boolean panel = plugin.panel().enabled;
         switch (name) {
-            case "block" -> block(player, args, s);
+            case "block" -> {
+                if (args.length == 0 && panel) {
+                    MainMenu.openFromCommand(plugin, player);
+                } else {
+                    block(player, args, s);
+                }
+            }
             case "unblock" -> unblock(player, args, s);
-            case "blocklist" -> list(player, s);
+            case "blocklist" -> {
+                if (panel) {
+                    MainMenu.openFromCommand(plugin, player);
+                } else {
+                    list(player, s);
+                }
+            }
             default -> {
                 return false;
             }
@@ -63,27 +78,45 @@ public final class BlockCommands implements TabExecutor {
             s.send(player, "not-found", args[0]);
             return;
         }
-        String targetName = nameOf(target.getUniqueId());
-        if (target.getUniqueId().equals(player.getUniqueId())) {
+        block(player, target.getUniqueId());
+    }
+
+    /** Blocks with every check and the chat feedback. Shared by the command and the panel. */
+    public boolean block(Player player, UUID target) {
+        Settings s = plugin.settings();
+        String targetName = nameOf(target);
+        if (target.equals(player.getUniqueId())) {
             s.send(player, "self");
-            return;
+            return false;
         }
-        Player online = target.getPlayer();
+        Player online = Bukkit.getPlayer(target);
         if (online != null && online.hasPermission(BlockPolicy.EXEMPT)) {
             s.send(player, "exempt", targetName);
-            return;
+            return false;
         }
         BlockStore store = plugin.store();
-        if (store.isBlocking(player.getUniqueId(), target.getUniqueId())) {
+        if (store.isBlocking(player.getUniqueId(), target)) {
             s.send(player, "already-blocked", targetName);
-            return;
+            return false;
         }
         if (store.count(player.getUniqueId()) >= s.maxBlocks) {
             s.send(player, "limit", null, Settings.tag("max", s.maxBlocks));
-            return;
+            return false;
         }
-        store.add(player.getUniqueId(), target.getUniqueId());
+        store.add(player.getUniqueId(), target);
         s.send(player, "blocked", targetName);
+        return true;
+    }
+
+    /** Unblocks with chat feedback. Shared by the command and the panel. */
+    public boolean unblock(Player player, UUID target) {
+        Settings s = plugin.settings();
+        if (!plugin.store().remove(player.getUniqueId(), target)) {
+            s.send(player, "not-blocked", nameOf(target));
+            return false;
+        }
+        s.send(player, "unblocked", nameOf(target));
+        return true;
     }
 
     private void unblock(Player player, String[] args, Settings s) {
@@ -107,11 +140,11 @@ public final class BlockCommands implements TabExecutor {
                 target = resolved.getUniqueId();
             }
         }
-        if (target == null || !plugin.store().remove(owner, target)) {
-            s.send(player, "not-blocked", target == null ? args[0] : nameOf(target));
+        if (target == null) {
+            s.send(player, "not-blocked", args[0]);
             return;
         }
-        s.send(player, "unblocked", nameOf(target));
+        unblock(player, target);
     }
 
     private void list(Player player, Settings s) {
@@ -178,7 +211,7 @@ public final class BlockCommands implements TabExecutor {
         return null;
     }
 
-    static String nameOf(UUID uuid) {
+    public static String nameOf(UUID uuid) {
         String n = Bukkit.getOfflinePlayer(uuid).getName();
         return n != null ? n : uuid.toString();
     }

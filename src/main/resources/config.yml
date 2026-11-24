@@ -85,3 +85,99 @@ messages:
   # Quem tenta falar com alguém que ele mesmo bloqueou.
   you-blocked-target: "<red>Você bloqueou <white><player></white>. Use <white>/unblock <player></white> para falar com ele."
   reloaded: "<green>Configuração recarregada."
+
+# Painel (/block sem argumentos, /blocklist): menus para ver, bloquear e desbloquear jogadores.
+panel:
+  enabled: true
+  # Ícones e fundos do resource pack (pasta resourcepack/craftengine/blockcontrol do repositório).
+  # Ligue SOMENTE depois de instalar o pack no CraftEngine: sem ele os botões ficam sem textura.
+  resource-pack: false
+  namespace: "blockcontrol"
+  font: "blockcontrol:gui"
+  # Animação de abertura: as cabeças entram em onda, 1 diagonal a cada N ticks. 0 = sem animação.
+  reveal-ticks: 1
+  sounds: true
+  titles:
+    main: "Bloqueios"
+    picker: "Bloquear jogador"
+    confirm-block: "Bloquear <player>?"
+    confirm-unblock: "Desbloquear <player>?"
+  # Ícones usados sem o resource pack.
+  materials:
+    escudo: SHIELD
+    chat: PAPER
+    tell: WRITABLE_BOOK
+    tpa: ENDER_PEARL
+    voz: NOTE_BLOCK
+    bloquear: BARRIER
+    desbloquear: LIME_DYE
+    confirmar: LIME_CONCRETE
+    cancelar: RED_CONCRETE
+    fechar: OAK_DOOR
+    anterior: ARROW
+    proximo: ARROW
+    voltar: SPRUCE_DOOR
+    ajuda: BOOK
+    vazio: GRAY_DYE
+  texts:
+    summary-name: "<#f87171><b>Seus bloqueios"
+    summary-lore:
+      - "<gray>Bloqueados: <white><count></white><dark_gray>/</dark_gray><white><max>"
+      - ""
+      - "<gray>Quem você bloqueia some do seu chat,"
+      - "<gray>/tell, pedidos de teleporte e voz."
+    feature-on: "<#4ade80>● Ativo"
+    feature-off: "<dark_gray>● Desligado neste servidor"
+    feature-chat: "<white>Chat"
+    feature-chat-lore: "<gray>Mensagens do chat público."
+    feature-tell: "<white>Mensagens privadas"
+    feature-tell-lore: "<gray>/tell, /msg e /r, nos dois sentidos."
+    feature-tpa: "<white>Pedidos de teleporte"
+    feature-tpa-lore: "<gray>/tpa e /tpahere, nos dois sentidos."
+    feature-voz: "<white>Voice chat"
+    feature-voz-lore: "<gray>Você deixa de ouvir quem bloqueou."
+    head-name: "<#fca5a5><player>"
+    head-online: "<#4ade80>● Online neste servidor"
+    head-offline: "<dark_gray>● Fora deste servidor"
+    head-new: "<gold>✦ Bloqueado agora"
+    head-unblock-hint: "<#4ade80>Clique para desbloquear"
+    pick-name: "<white><player>"
+    pick-hint: "<#f87171>Clique para bloquear"
+    empty-name: "<gray>Ninguém bloqueado"
+    empty-lore:
+      - "<dark_gray>Use o botão abaixo para bloquear"
+      - "<dark_gray>alguém que está online."
+    picker-info-name: "<#f87171><b>Bloquear jogador"
+    picker-info-lore:
+      - "<gray>Escolha quem está online aqui."
+      - "<gray>Para quem está em outro servidor"
+      - "<gray>ou offline: <white>/block <nome>"
+    picker-empty-name: "<gray>Ninguém para bloquear"
+    picker-empty-lore:
+      - "<dark_gray>Não há outros jogadores online"
+      - "<dark_gray>neste servidor."
+    add-name: "<#f87171><b>Bloquear alguém"
+    add-lore:
+      - "<gray>Escolha um jogador online."
+    help-name: "<white><b>Como funciona"
+    help-lore:
+      - "<gray>Bloquear esconde de você o chat,"
+      - "<gray>o /tell, os pedidos de teleporte"
+      - "<gray>e a voz do jogador, em todos os"
+      - "<gray>servidores da rede."
+      - ""
+      - "<gray>Comandos: <white>/block <nome></white>, <white>/unblock <nome>"
+    close-name: "<gray>Fechar"
+    back-name: "<gray>Voltar"
+    previous-name: "<gray>Página anterior"
+    next-name: "<gray>Próxima página"
+    page-lore: "<dark_gray>Página <page>/<pages>"
+    confirm-block-name: "<#4ade80><b>Bloquear"
+    confirm-block-lore:
+      - "<gray>Você deixa de ver o chat, /tell,"
+      - "<gray>pedidos de teleporte e a voz de"
+      - "<white><player></white><gray>.</gray>"
+    confirm-unblock-name: "<#4ade80><b>Desbloquear"
+    confirm-unblock-lore:
+      - "<gray><white><player></white> volta a aparecer para você."
+    cancel-name: "<#f87171><b>Cancelar"
