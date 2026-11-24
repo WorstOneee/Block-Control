@@ -64,7 +64,8 @@ teleport:
 extra-commands: []
 
 messages:
-  prefix: "<dark_gray>[<red>Block</red>]</dark_gray> "
+  # Texto antes de cada mensagem. Vazio = só a mensagem.
+  prefix: ""
   only-players: "<red>Apenas jogadores podem usar este comando."
   usage-block: "<gray>Use <white>/block <jogador></white>."
   usage-unblock: "<gray>Use <white>/unblock <jogador></white>."
