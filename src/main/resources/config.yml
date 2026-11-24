@@ -1,0 +1,67 @@
+# SerpensBlock
+# Quem bloqueia um jogador deixa de ver o chat dele, recebe nada dele no /tell,
+# não recebe pedidos de teleporte dele e deixa de ouvi-lo no voice chat.
+
+# Máximo de jogadores que cada um pode bloquear.
+max-blocks: 100
+
+chat:
+  # Esconde as mensagens do chat público (CarbonChat) do jogador bloqueado.
+  enabled: true
+  # true: o jogador bloqueado também deixa de ver as mensagens de quem o bloqueou.
+  mutual: false
+
+private-messages:
+  # Bloqueia /tell, /msg, /r etc. do CarbonChat nos dois sentidos:
+  # o bloqueado não manda para quem bloqueou, e quem bloqueou também não manda para ele.
+  enabled: true
+
+voice:
+  # Silencia o jogador bloqueado no Simple Voice Chat (proximidade e grupos).
+  enabled: true
+  # true: o jogador bloqueado também deixa de ouvir quem o bloqueou.
+  mutual: true
+
+teleport:
+  # Bloqueia pedidos de teleporte nos dois sentidos.
+  enabled: true
+  # Comandos cujo primeiro argumento é o jogador alvo (sem a barra).
+  # Prefixos como "essentials:" são removidos antes da comparação.
+  commands:
+    - tpa
+    - tpask
+    - call
+    - tpahere
+    - tpaskhere
+    - etpa
+    - etpask
+    - ecall
+    - etpahere
+    - tpr
+    - tprequest
+
+# Comandos extras bloqueados do mesmo jeito (primeiro argumento = jogador alvo).
+# Útil se algum /tell não passar pelo CarbonChat. Ex.: [mail, trade, duel]
+extra-commands: []
+
+messages:
+  prefix: "<dark_gray>[<red>Block</red>]</dark_gray> "
+  only-players: "<red>Apenas jogadores podem usar este comando."
+  usage-block: "<gray>Use <white>/block <jogador></white>."
+  usage-unblock: "<gray>Use <white>/unblock <jogador></white>."
+  not-found: "<red>Jogador <white><player></white> não encontrado."
+  self: "<red>Você não pode bloquear a si mesmo."
+  exempt: "<red>Você não pode bloquear <white><player></white>."
+  limit: "<red>Você atingiu o limite de <white><max></white> jogadores bloqueados."
+  already-blocked: "<yellow><white><player></white> já está bloqueado."
+  blocked: "<green>Você bloqueou <white><player></white>. Não verá mais o chat, /tell, pedidos de teleporte nem a voz dele."
+  not-blocked: "<yellow><white><player></white> não está bloqueado."
+  unblocked: "<green>Você desbloqueou <white><player></white>."
+  list-empty: "<gray>Você não bloqueou ninguém."
+  list-header: "<gray>Jogadores bloqueados (<white><count></white>):"
+  list-entry: "<dark_gray> - <white><player></white> <click:run_command:'/unblock <player>'><hover:show_text:'<gray>Clique para desbloquear'><red>[desbloquear]</red></hover></click>"
+  # Quem tenta falar com alguém que o bloqueou.
+  target-blocked-you: "<red><white><player></white> não está aceitando suas mensagens ou pedidos."
+  # Quem tenta falar com alguém que ele mesmo bloqueou.
+  you-blocked-target: "<red>Você bloqueou <white><player></white>. Use <white>/unblock <player></white> para falar com ele."
+  reloaded: "<green>Configuração recarregada."

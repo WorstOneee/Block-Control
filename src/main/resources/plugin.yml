@@ -1,0 +1,39 @@
+name: SerpensBlock
+version: '${project.version}'
+main: br.com.serpens.block.SerpensBlockPlugin
+api-version: '1.21'
+author: Zwo
+description: Bloqueio de jogadores (chat, /tell, pedidos de teleporte e voice chat).
+softdepend: [CarbonChat, voicechat, ZwoTeleport, Essentials, HuskHomes, CMI]
+
+commands:
+  block:
+    description: Bloqueia um jogador.
+    usage: /<command> <jogador>
+    aliases: [bloquear]
+    permission: serpensblock.use
+  unblock:
+    description: Desbloqueia um jogador.
+    usage: /<command> <jogador>
+    aliases: [desbloquear]
+    permission: serpensblock.use
+  blocklist:
+    description: Lista os jogadores que você bloqueou.
+    usage: /<command>
+    aliases: [bloqueados, blocks]
+    permission: serpensblock.use
+  serpensblock:
+    description: Administração do SerpensBlock.
+    usage: /<command> reload
+    permission: serpensblock.admin
+
+permissions:
+  serpensblock.use:
+    description: Usar /block, /unblock e /blocklist.
+    default: true
+  serpensblock.exempt:
+    description: Não pode ser bloqueado; o bloqueio é ignorado para mensagens e pedidos desse jogador (staff).
+    default: false
+  serpensblock.admin:
+    description: Recarregar a configuração.
+    default: op
