@@ -11,10 +11,39 @@ Player block list for Paper 1.21.11 that complements CarbonChat. A player who bl
 
 | Command | Aliases | Description |
 |---|---|---|
+| `/block` | `/bloquear` | Open the panel |
 | `/block <player>` | `/bloquear` | Block a player (online, or one who has joined before) |
 | `/unblock <player>` | `/desbloquear` | Unblock a player |
-| `/blocklist` | `/bloqueados`, `/blocks` | List blocked players, with a click-to-unblock button |
+| `/blocklist` | `/bloqueados`, `/blocks` | Open the panel (a text list when `panel.enabled: false`) |
 | `/serpensblock reload` | | Reload `config.yml` |
+
+## Player panel
+
+`/block` with no name (or `/blocklist`) opens the panel:
+
+- **Bloqueios** (6 rows): the header shows what a block covers on this server (chat, private messages, teleport, voice, each marked active or off) and a summary with the count. Below it are the heads of blocked players, 28 per page, with online status. The player who was just blocked comes first, with a glint. Clicking a head asks to confirm the unblock.
+- **Bloquear jogador**: online players on this server who can be blocked (not yourself, not vanished, not `serpensblock.exempt`). Clicking one asks to confirm. Players on other servers or offline are blocked with `/block <name>`.
+- **Confirmation** (3 rows): the head with confirm and cancel buttons.
+
+The heads appear in a diagonal wave when a menu opens (`panel.reveal-ticks`, 0 turns it off). The wave task only runs for those few ticks. Buttons play sounds (`panel.sounds`). Clicks are rate limited and nothing can be taken out of the menus. Every text, title and fallback material is in `config.yml` under `panel`.
+
+### Resource pack
+
+`resourcepack/craftengine/blockcontrol/` is a CraftEngine pack in the same format as AuctionHouseSerp's:
+
+- `items/gui/<icon>.json` + `models/item/gui/<icon>.json` + `textures/item/gui/<icon>.png`: 16 icons at 64x64, used through the `item_model` component (`blockcontrol:gui/<icon>`), with no `custom_model_data`. Seven come from the images in `tools/icones/` (help, cancel, confirm, chat, private message, teleport, shield); the rest are drawn by the generator in the same style.
+- Seven icons have a light animation through `.png.mcmeta` (12 frames, 4 ticks each): a shine across the shield, a slow spin on the teleport galaxy, a 1 px bob on both chat bubbles, a soft pulse on the block sign, the voice waves, and the empty-list silhouette floating. The client animates them, so the server does no work for it.
+- `font/gui.json` and `textures/font/gui/fundo_3.png` / `fundo_6.png`: light, vanilla-style menu backgrounds with a wine-red title band with gold trim, and thin wine lines around the header and navigation rows. They use the private font `blockcontrol:gui` (`U+E000`, `U+E001`, and spaces `U+F000` = -8 and `U+F001` = -165, which starts the title 4 px inside the band), so they cannot clash with other fonts. They stop above the "Inventário" label.
+
+Install it like this:
+
+1. Copy `resourcepack/craftengine/blockcontrol/` to `plugins/CraftEngine/resources/` on the server that builds the pack.
+2. Run `/ce reload all`.
+3. Once players have the pack, set `panel.resource-pack: true` and run `/serpensblock reload`.
+
+Without the pack (`resource-pack: false`, the default), the panel uses the vanilla items from `panel.materials` and a plain title.
+
+The background position is calculated, not yet checked in a client. If it looks shifted, adjust `ascent` in `font/gui.json` (vertical) or the space advances (horizontal). To change the art, edit `tools/gerar_assets.py` and run `python tools/gerar_assets.py [heads folder]` (Python 3 + Pillow with AVIF support). It also redraws the previews in `docs/previas/`; the optional folder holds real head PNGs used only in the previews. In game, every head always shows the player's own skin.
 
 ## Permissions
 

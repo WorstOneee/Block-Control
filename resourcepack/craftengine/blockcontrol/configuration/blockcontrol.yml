@@ -1,0 +1,3 @@
+# O Block Control não registra itens, blocos nem imagens no CraftEngine.
+# Ícones usam o componente item_model (assets/blockcontrol/items/gui/*) e os fundos
+# usam a fonte própria blockcontrol:gui. Este arquivo existe só para marcar o pacote.

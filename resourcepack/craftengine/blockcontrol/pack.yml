@@ -1,0 +1,5 @@
+# Pacote de recursos do Block Control para o CraftEngine (integra o pack único do Serpens).
+author: Zwo
+version: 1.0.0
+description: Ícones e fundos do painel do Block Control
+namespace: blockcontrol
